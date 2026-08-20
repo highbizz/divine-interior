@@ -11,7 +11,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
             <div className="mb-3 flex items-center gap-3">
-              <img src="/banner/DI-logo.png" alt="Divine Interior Logo" className="h-10 w-auto object-contain brightness-0 invert" />
+              <img src="/banner/office-furnisho-logo.png?v=2" alt="Office Furnisho Logo" className="h-14 w-auto md:h-18 object-contain brightness-0 invert" />
             </div>
             <p className="font-sans text-[9px] font-semibold uppercase tracking-[0.3em] mt-2 text-primary">
               Premium Ergonomic Chairs

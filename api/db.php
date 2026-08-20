@@ -13,9 +13,7 @@ function get_db(): PDO {
             PDO::ATTR_EMULATE_PREPARES   => false,
         ]);
     } catch (PDOException $e) {
-        http_response_code(500);
-        echo json_encode(['error' => 'Database connection failed: ' . $e->getMessage()]);
-        exit;
+        json_error('Database connection failed: ' . $e->getMessage(), 500);
     }
 
     return $pdo;
@@ -24,12 +22,14 @@ function get_db(): PDO {
 // ─── Response helpers ──────────────────────────────────────
 function json_success($data, int $code = 200): void {
     http_response_code($code);
+    header('Content-Type: application/json; charset=utf-8');
     echo json_encode(['success' => true, 'data' => $data]);
     exit;
 }
 
 function json_error(string $message, int $code = 400): void {
     http_response_code($code);
+    header('Content-Type: application/json; charset=utf-8');
     echo json_encode(['success' => false, 'error' => $message]);
     exit;
 }

@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Loader2, FileText, Search, ArrowRight, Calendar, User } from "lucide-react";
 import { blogsApi, type Blog } from "@/lib/api";
+import { DEFAULT_BLOGS } from "@/data/defaultBlogs";
+import SEO from "@/components/SEO";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -18,9 +20,22 @@ const Blogs = () => {
       const params: Record<string, string> = {};
       if (q) params.search = q;
       const res = await blogsApi.list(params);
-      // Only published blogs shown publicly
-      setBlogs(res.items.filter(b => b.status === "published"));
-    } catch (e) { console.error(e); }
+      const published = res.items.filter(b => b.status === "published");
+      if (published.length > 0) {
+        setBlogs(published);
+      } else {
+        const filtered = DEFAULT_BLOGS.filter(b => 
+          !q || b.title.toLowerCase().includes(q.toLowerCase()) || b.excerpt.toLowerCase().includes(q.toLowerCase())
+        );
+        setBlogs(filtered);
+      }
+    } catch (e) {
+      console.error(e);
+      const filtered = DEFAULT_BLOGS.filter(b => 
+        !q || b.title.toLowerCase().includes(q.toLowerCase()) || b.excerpt.toLowerCase().includes(q.toLowerCase())
+      );
+      setBlogs(filtered);
+    }
     setLoading(false);
   }, []);
 
@@ -34,6 +49,10 @@ const Blogs = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO 
+        title="Office Furnisho Journal & Ergonomic Guides" 
+        description="Read expert articles on ergonomics, workplace interior design, productivity, and office seating comparisons."
+      />
       <Navbar />
 
       {/* Hero */}

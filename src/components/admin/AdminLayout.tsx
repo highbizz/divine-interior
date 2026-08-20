@@ -100,15 +100,10 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const Sidebar = () => (
     <div className="flex h-full flex-col bg-white border-r border-gray-200">
       {/* Logo */}
-      <div className="flex h-16 items-center gap-3 border-b border-gray-200 px-5">
-        <Link to="/studio" className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-black">
-            <span className="font-display text-xs font-bold text-white">DI</span>
-          </div>
-          <div>
-            <p className="font-display text-sm font-bold text-black leading-none tracking-wide">Divine Interior</p>
-            <p className="font-sans text-[9px] uppercase tracking-widest text-gray-400 mt-0.5">Admin</p>
-          </div>
+      <div className="flex h-20 items-center gap-3 border-b border-gray-200 px-5">
+        <Link to="/studio" className="flex items-center gap-3">
+          <img src="/banner/office-furnisho-logo.png?v=2" alt="Office Furnisho Logo" className="h-12 w-auto object-contain" />
+          <span className="rounded bg-gray-100 px-1.5 py-0.5 font-sans text-[9px] font-semibold uppercase tracking-widest text-gray-500">Admin</span>
         </Link>
       </div>
 

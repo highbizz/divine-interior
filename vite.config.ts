@@ -22,12 +22,6 @@ export default defineConfig(({ mode }) => ({
           });
         },
       },
-      // Proxy product images from XAMPP so /products/xxx.png works in dev
-      '/products': {
-        target: 'http://127.0.0.1:80',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/products/, '/divineinterior/products'),
-      },
     },
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),

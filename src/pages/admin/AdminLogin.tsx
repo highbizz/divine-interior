@@ -42,13 +42,8 @@ const AdminLogin = () => {
 
         {/* Top — logo */}
         <div className="relative z-10 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20">
-            <span className="font-display text-base font-bold text-white">DI</span>
-          </div>
-          <div>
-            <p className="font-display text-white text-sm font-semibold tracking-wide leading-none">Divine Interior</p>
-            <p className="font-sans text-[9px] uppercase tracking-widest mt-0.5 text-white/40">Admin Portal</p>
-          </div>
+          <img src="/banner/office-furnisho-logo.png?v=2" alt="Office Furnisho Logo" className="h-14 w-auto object-contain" />
+          <span className="rounded bg-white/10 px-2 py-0.5 font-sans text-[9px] font-semibold uppercase tracking-widest text-white/70">Admin Portal</span>
         </div>
 
         {/* Middle — product image */}
@@ -87,11 +82,9 @@ const AdminLogin = () => {
         <div className="w-full max-w-[360px]">
 
           {/* Mobile logo */}
-          <div className="mb-8 flex lg:hidden items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-black">
-              <span className="font-display text-sm font-bold text-white">DI</span>
-            </div>
-            <span className="font-display text-sm font-bold text-black tracking-wide">Divine Interior</span>
+          <div className="mb-8 flex lg:hidden items-center gap-3">
+            <img src="/banner/office-furnisho-logo.png?v=2" alt="Office Furnisho Logo" className="h-12 w-auto object-contain" />
+            <span className="rounded bg-gray-100 px-1.5 py-0.5 font-sans text-[9px] font-semibold uppercase tracking-widest text-gray-500">Admin</span>
           </div>
 
           {/* Heading */}

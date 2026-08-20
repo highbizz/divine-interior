@@ -3,8 +3,11 @@ import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Loader2, ArrowLeft, Calendar, User, Eye, FileText, Tag } from "lucide-react";
 import { blogsApi, type Blog } from "@/lib/api";
+import { DEFAULT_BLOGS } from "@/data/defaultBlogs";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+
+import SEO from "@/components/SEO";
 
 const BlogDetail = () => {
   const { slug }  = useParams<{ slug: string }>();
@@ -16,16 +19,28 @@ const BlogDetail = () => {
     if (!slug) return;
     setLoading(true);
 
-    // Fetch all published blogs, find the one matching slug
     blogsApi.list({ per_page: "50" })
       .then(res => {
         const published = res.items.filter(b => b.status === "published");
-        const found = published.find(b => b.slug === slug) ?? null;
-        setBlog(found);
-        // Related = other published blogs, up to 3
-        setRelated(published.filter(b => b.slug !== slug).slice(0, 3));
+        let found = published.find(b => b.slug === slug);
+        let rel = published.filter(b => b.slug !== slug);
+        
+        if (!found) {
+          found = DEFAULT_BLOGS.find(b => b.slug === slug);
+        }
+        if (rel.length === 0) {
+          rel = DEFAULT_BLOGS.filter(b => b.slug !== slug);
+        }
+        
+        setBlog(found ?? null);
+        setRelated(rel.slice(0, 3));
       })
-      .catch(() => setBlog(null))
+      .catch(() => {
+        const found = DEFAULT_BLOGS.find(b => b.slug === slug) ?? null;
+        const rel = DEFAULT_BLOGS.filter(b => b.slug !== slug).slice(0, 3);
+        setBlog(found);
+        setRelated(rel);
+      })
       .finally(() => setLoading(false));
   }, [slug]);
 
@@ -55,6 +70,13 @@ const BlogDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO 
+        title={blog.meta_title || blog.title}
+        description={blog.meta_description || blog.excerpt}
+        keywords={Array.isArray(blog.tags) ? blog.tags.join(", ") : undefined}
+        image={blog.cover_image || undefined}
+        type="article"
+      />
       <Navbar />
 
       {/* Cover image */}

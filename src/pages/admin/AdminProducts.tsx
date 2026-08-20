@@ -16,7 +16,7 @@ import { toast } from 'sonner';
 import { productsApi, type Product } from '@/lib/api';
 import { ConfirmDialog } from '@/components/admin/ConfirmDialog';
 
-const CATEGORIES = ['Sofas & Couches','Coffee Tables','Dining Chairs','Dining Tables','Lighting','Rugs','Wardrobes','Beds','Side Tables','Accessories','Kitchens','Outdoor'];
+const CATEGORIES = ['Table','Adjustable Desk','Chairs','Sofas & Couches','Coffee Tables','Dining Chairs','Dining Tables','Lighting','Rugs','Wardrobes','Beds','Side Tables','Accessories','Kitchens','Outdoor'];
 
 const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 

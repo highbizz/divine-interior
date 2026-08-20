@@ -38,6 +38,7 @@ import AdminUsers from "./pages/admin/AdminUsers";
 
 // ── Layout / stores ───────────────────────────────────────
 import { AdminLayout } from "./components/admin/AdminLayout";
+import { FloatingWhatsApp } from "./components/FloatingWhatsApp";
 import { useAdminStore } from "./stores/adminStore";
 import { useCustomerStore } from "./stores/customerStore";
 import { getToken, getCustomerToken } from "./lib/api";
@@ -126,50 +127,88 @@ const AppContent = () => {
   const { loadMe } = useCustomerStore();
   useEffect(() => {
     if (getCustomerToken()) loadMe();
+
+    // Prevent right click & drag on images and videos
+    const handleContextMenu = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (
+        target &&
+        (target.tagName === 'IMG' ||
+         target.tagName === 'VIDEO' ||
+         target.closest('img') ||
+         target.closest('video'))
+      ) {
+        e.preventDefault();
+      }
+    };
+
+    const handleDragStart = (e: DragEvent) => {
+      const target = e.target as HTMLElement;
+      if (
+        target &&
+        (target.tagName === 'IMG' ||
+         target.tagName === 'VIDEO' ||
+         target.closest('img') ||
+         target.closest('video'))
+      ) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('contextmenu', handleContextMenu);
+    document.addEventListener('dragstart', handleDragStart);
+
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+      document.removeEventListener('dragstart', handleDragStart);
+    };
   }, []);
 
   return (
-    <Routes>
-      {/* ── Storefront ── */}
-      <Route path="/"                   element={<Index />} />
-      <Route path="/shop"               element={<Shop />} />
-      <Route path="/sale"               element={<Sale />} />
-      <Route path="/about"              element={<About />} />
-      <Route path="/contact"            element={<Contact />} />
-      <Route path="/product/:handle"    element={<ProductDetail />} />
-      <Route path="/blogs"              element={<Blogs />} />
-      <Route path="/blog/:slug"         element={<BlogDetail />} />
+    <>
+      <Routes>
+        {/* ── Storefront ── */}
+        <Route path="/"                   element={<Index />} />
+        <Route path="/shop"               element={<Shop />} />
+        <Route path="/sale"               element={<Sale />} />
+        <Route path="/about"              element={<About />} />
+        <Route path="/contact"            element={<Contact />} />
+        <Route path="/product/:handle"    element={<ProductDetail />} />
+        <Route path="/blogs"              element={<Blogs />} />
+        <Route path="/blog/:slug"         element={<BlogDetail />} />
 
-      {/* ── Customer auth ── */}
-      <Route path="/auth"               element={<CustomerAuth />} />
-      <Route path="/checkout"           element={<Checkout />} />
-      <Route path="/order-confirmation" element={<OrderConfirmation />} />
+        {/* ── Customer auth ── */}
+        <Route path="/auth"               element={<CustomerAuth />} />
+        <Route path="/checkout"           element={<Checkout />} />
+        <Route path="/order-confirmation" element={<OrderConfirmation />} />
 
-      {/* ── Customer account ── */}
-      <Route path="/account"            element={<AccountLayout />}>
-        <Route index                    element={<Navigate to="/account/orders" replace />} />
-        <Route path="orders"            element={<AccountOrders />} />
-        <Route path="profile"           element={<AccountProfile />} />
-        <Route path="addresses"         element={<AccountAddresses />} />
-      </Route>
+        {/* ── Customer account ── */}
+        <Route path="/account"            element={<AccountLayout />}>
+          <Route index                    element={<Navigate to="/account/orders" replace />} />
+          <Route path="orders"            element={<AccountOrders />} />
+          <Route path="profile"           element={<AccountProfile />} />
+          <Route path="addresses"         element={<AccountAddresses />} />
+        </Route>
 
-      {/* ── Admin ── */}
-      <Route path="/studio/login"       element={<AdminLoginGuard />} />
-      <Route path="/studio"             element={<AdminGuard />}>
-        <Route index                    element={<AdminDashboard />} />
-        <Route path="products"          element={<AdminProducts />} />
-        <Route path="orders"            element={<AdminOrders />} />
-        <Route path="blogs"             element={<AdminBlogs />} />
-        <Route path="customers"         element={<AdminCustomers />} />
-        <Route path="users"             element={<AdminUsers />} />
-      </Route>
+        {/* ── Admin ── */}
+        <Route path="/studio/login"       element={<AdminLoginGuard />} />
+        <Route path="/studio"             element={<AdminGuard />}>
+          <Route index                    element={<AdminDashboard />} />
+          <Route path="products"          element={<AdminProducts />} />
+          <Route path="orders"            element={<AdminOrders />} />
+          <Route path="blogs"             element={<AdminBlogs />} />
+          <Route path="customers"         element={<AdminCustomers />} />
+          <Route path="users"             element={<AdminUsers />} />
+        </Route>
 
-      {/* Legacy redirects */}
-      <Route path="/admin/login"        element={<Navigate to="/studio/login" replace />} />
-      <Route path="/admin/*"            element={<Navigate to="/studio" replace />} />
+        {/* Legacy redirects */}
+        <Route path="/admin/login"        element={<Navigate to="/studio/login" replace />} />
+        <Route path="/admin/*"            element={<Navigate to="/studio" replace />} />
 
-      <Route path="*"                   element={<NotFound />} />
-    </Routes>
+        <Route path="*"                   element={<NotFound />} />
+      </Routes>
+      <FloatingWhatsApp />
+    </>
   );
 };
 

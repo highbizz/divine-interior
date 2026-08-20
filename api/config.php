@@ -16,17 +16,17 @@ $isLocal = in_array($hostName, ['localhost', '127.0.0.1', '::1'])
 // ─── Database ─────────────────────────────────────────────
 if ($isLocal) {
     define('DB_HOST', 'localhost');
-    define('DB_NAME', 'divine_interior');
-    define('DB_USER', 'root');
-    define('DB_PASS', '');
+    define('DB_NAME', 'u839176890_divineinterior');
+    define('DB_USER', 'u839176890_divineinterior');
+    define('DB_PASS', 'Divineinterior@2026');
     define('DB_PORT', 3307);          // XAMPP default port
 } else {
-    // ─── LIVE SERVER — fill these before going live ────────
-    define('DB_HOST', 'localhost');   // usually localhost on cPanel
-    define('DB_NAME', 'your_db_name');  // ← change to your cPanel DB name
-    define('DB_USER', 'your_db_user');  // ← change to your cPanel DB user
-    define('DB_PASS', 'your_db_pass');  // ← change to your cPanel DB password
-    define('DB_PORT', 3306);            // standard MySQL port on live
+    // ─── LIVE SERVER (Hostinger) ───────────────────────────
+    define('DB_HOST', 'localhost');
+    define('DB_NAME', 'u839176890_divineinterior');
+    define('DB_USER', 'u839176890_divineinterior');
+    define('DB_PASS', 'Divineinterior@2026');
+    define('DB_PORT', 3306);
 }
 
 // ─── JWT ──────────────────────────────────────────────────
@@ -60,14 +60,10 @@ $allowed_origins = [
 ];
 
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-if (in_array($origin, $allowed_origins)) {
+if (!empty($origin)) {
     header("Access-Control-Allow-Origin: $origin");
-} elseif (!$isLocal) {
-    // On live server, allow same origin (no Origin header = same-origin = ok)
-    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-    header("Access-Control-Allow-Origin: {$scheme}://{$_SERVER['HTTP_HOST']}");
 } else {
-    header('Access-Control-Allow-Origin: http://localhost:8080');
+    header('Access-Control-Allow-Origin: *');
 }
 
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');

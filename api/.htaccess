@@ -1,0 +1,9 @@
+# Allow Apache on cPanel / Hostinger to pass Authorization header to PHP
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP:Authorization} ^(.*)
+  RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+</IfModule>
+
+# Set Environment variables directly
+SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1

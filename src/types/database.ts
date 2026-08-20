@@ -1,7 +1,6 @@
 // ============================================================
-// Supabase Database Types
-// Auto-generate these by running: npx supabase gen types typescript
-// Or define them manually to match your schema
+// MySQL / PHP Database Types
+// Matches MySQL schema defined in api/schema.sql
 // ============================================================
 
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];

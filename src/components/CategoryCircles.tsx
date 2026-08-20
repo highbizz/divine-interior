@@ -7,32 +7,32 @@ const categories = [
   {
     label: "Accessories",
     image: "/products/category-accessories.png",
-    href: "/shop",
+    href: "/shop?category=Accessories",
   },
   {
     label: "Adjustable Desk",
     image: "/products/category-adjustable-desk.png",
-    href: "/shop",
+    href: "/shop?category=Adjustable+Desk",
   },
   {
     label: "Cafeteria chairs",
     image: "/products/category-cafeteria-chairs.png",
-    href: "/shop",
+    href: "/shop?category=Cafeteria+chairs",
   },
   {
     label: "Chairs",
     image: "/products/category-chairs.png",
-    href: "/shop",
+    href: "/shop?category=Chairs",
   },
   {
     label: "Storage",
     image: "/products/category-storage.png",
-    href: "/shop",
+    href: "/shop?category=Storage",
   },
   {
     label: "Table",
     image: "/products/category-table.png",
-    href: "/shop",
+    href: "/shop?category=Adjustable+Desk",
   },
 ];
 

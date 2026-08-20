@@ -57,7 +57,7 @@ const Navbar = () => {
       {/* Top utility row */}
       <div className="mx-auto flex max-w-7xl items-center gap-4 px-6 py-4 lg:px-12">
         <Link to="/" className="flex flex-shrink-0 items-center">
-          <img src="/banner/DI-logo.png" alt="Divine Interior Logo" className="h-10 w-auto md:h-12 object-contain" />
+          <img src="/banner/office-furnisho-logo.png?v=2" alt="Office Furnisho Logo" className="h-14 w-auto md:h-16 lg:h-20 object-contain transition-all duration-300" />
         </Link>
 
         <form onSubmit={onSearchSubmit} className="hidden flex-1 items-center md:flex">

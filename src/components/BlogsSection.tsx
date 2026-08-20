@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, FileText, Loader2, Calendar, User } from "lucide-react";
 import { blogsApi, type Blog } from "@/lib/api";
+import { DEFAULT_BLOGS } from "@/data/defaultBlogs";
 
 const BlogsSection = () => {
   const ref = useRef(null);
@@ -12,13 +13,12 @@ const BlogsSection = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch only published blogs from MySQL
     blogsApi.list({ per_page: "3" })
       .then(res => {
         const published = res.items.filter(b => b.status === "published").slice(0, 3);
-        setBlogs(published);
+        setBlogs(published.length > 0 ? published : DEFAULT_BLOGS.slice(0, 3));
       })
-      .catch(console.error)
+      .catch(() => setBlogs(DEFAULT_BLOGS.slice(0, 3)))
       .finally(() => setLoading(false));
   }, []);
 

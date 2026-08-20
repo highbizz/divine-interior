@@ -130,6 +130,23 @@ export const EnquiryModal = ({ product, isOpen, onClose }: EnquiryModalProps) =>
           </div>
         </div>
 
+        {/* Instant WhatsApp Order Option */}
+        <div className="mb-4">
+          <a
+            href={`https://wa.me/919902841970?text=${encodeURIComponent(
+              `Hello I want to buy:\n\n*${product.title}*\n*Price:* ₹${Number(product.price).toLocaleString("en-IN")}\n*URL:* ${window.location.origin}/product/${product.slug}\n\nThank you!`
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] text-white py-3.5 px-4 font-sans text-xs font-bold uppercase tracking-wider rounded-md transition-all shadow-sm hover:shadow-md"
+          >
+            <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24">
+              <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984 0 1.763.459 3.484 1.332 5.002L2 22l5.127-1.341c1.464.798 3.116 1.218 4.881 1.219h.004c5.506 0 9.99-4.478 9.99-9.985 0-2.668-1.039-5.176-2.926-7.062A9.927 9.927 0 0 0 12.012 2zm.004 1.661c4.586 0 8.318 3.731 8.319 8.322 0 2.224-.866 4.314-2.438 5.885a8.274 8.274 0 0 1-5.881 2.435h-.003c-1.474 0-2.915-.395-4.172-1.141l-.299-.178-3.097.81.826-3.018-.195-.311A8.257 8.257 0 0 1 3.682 11.99c0-4.59 3.732-8.322 8.334-8.329z" />
+            </svg>
+            Order via WhatsApp (+91 99028 41970)
+          </a>
+        </div>
+
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-1">
           {/* Contact Details */}
           <div className="grid gap-4 sm:grid-cols-2">

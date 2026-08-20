@@ -236,4 +236,17 @@
   .admin-fade-up-3 { animation-delay: 0.15s; opacity: 0; }
   .admin-fade-up-4 { animation-delay: 0.20s; opacity: 0; }
   .admin-fade-up-5 { animation-delay: 0.25s; opacity: 0; }
+
+  /* Protect media from downloading, selection and dragging */
+  img, video {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+  }
 }

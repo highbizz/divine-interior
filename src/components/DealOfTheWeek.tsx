@@ -12,13 +12,21 @@ const DealOfTheWeek = () => {
   const [loading, setLoading]   = useState(true);
 
   useEffect(() => {
-    productsApi.list({ active: '1', per_page: '5' })
-      .then(res => setProducts(res.items.slice(0, 5)))
+    productsApi.list({ active: '1', per_page: '50' })
+      .then(res => {
+        const chairs = res.items.filter(p => p.category.toLowerCase().includes('chair'));
+        const desks  = res.items.filter(p => p.category.toLowerCase().includes('desk') || p.category.toLowerCase().includes('table'));
+        const mixed: Product[] = [];
+        const maxLen = Math.max(chairs.length, desks.length);
+        for (let i = 0; i < maxLen; i++) {
+          if (chairs[i]) mixed.push(chairs[i]);
+          if (desks[i]) mixed.push(desks[i]);
+        }
+        setProducts(mixed.slice(0, 6));
+      })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
-
-
 
   return (
     <section className="bg-background py-16 lg:py-24 border-t border-border">
@@ -39,7 +47,7 @@ const DealOfTheWeek = () => {
         ) : products.length === 0 ? (
           <div className="py-16 text-center font-serif text-muted-foreground">New products coming soon.</div>
         ) : (
-          <div className="grid gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+          <div className="grid gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
             {products.map((p, i) => {
               const image      = p.images[0];
               const currentAmt = Number(p.price);

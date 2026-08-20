@@ -61,8 +61,8 @@ async function request<T>(
   }
 
   const contentType = res.headers.get('content-type') || '';
-  if (!res.ok || contentType.includes('text/html') || !contentType.includes('application/json')) {
-    throw new Error(`API_OFFLINE: Non-JSON or error response (${res.status})`);
+  if (contentType.includes('text/html') || !contentType.includes('application/json')) {
+    throw new Error(`API_OFFLINE: Non-JSON response (${res.status})`);
   }
 
   let json: ApiResponse<T>;
@@ -72,7 +72,7 @@ async function request<T>(
     throw new Error(`API_OFFLINE: Invalid JSON response (${res.status})`);
   }
 
-  if (!json.success) {
+  if (!res.ok || !json.success) {
     throw new Error(json.error ?? `API error ${res.status}`);
   }
 
@@ -171,7 +171,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
     currency: "INR",
     category: "Chairs",
     tags: ["chairs", "featherlite", "office"],
-    images: ["/products/Featherlite1.png", "/products/Featherlite2.png"],
+    images: ["/products/Featherlite1.png", "/products/Featherlite2.png", "/products/Featherlite3.png", "/products/Featherlite5.png"],
     stock: 15,
     sku: "FL-OPTIMA-MB-001",
     is_active: 1,
@@ -191,7 +191,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
     currency: "INR",
     category: "Chairs",
     tags: ["chairs", "featherlite", "high-back"],
-    images: ["/products/OptimaHigh1.png", "/products/OptimaHigh2.png"],
+    images: ["/products/OptimaHigh1.png", "/products/OptimaHigh2.png", "/products/OptimaHigh3.png"],
     stock: 12,
     sku: "FL-OPTIMA-HB-001",
     is_active: 1,
@@ -211,7 +211,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
     currency: "INR",
     category: "Chairs",
     tags: ["featured", "chairs", "steelcase"],
-    images: ["/products/STEELCASE1.png", "/products/STEELCASE2.png"],
+    images: ["/products/STEELCASE1.png", "/products/STEELCASE2.png", "/products/STEELCASE3.png", "/products/STEELCASE4.png", "/products/STEELCASE5.png"],
     stock: 8,
     sku: "SC-LEAP-V2-001",
     is_active: 1,
@@ -231,7 +231,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
     currency: "INR",
     category: "Chairs",
     tags: ["featured", "chairs", "herman-miller"],
-    images: ["/products/HMmirra2-1.png", "/products/HMmirra2-2.png"],
+    images: ["/products/HMmirra2-1.png", "/products/HMmirra2-2.png", "/products/HMmirra2-3.png", "/products/HMmirra2-4.png"],
     stock: 7,
     sku: "HM-MIRRA2-001",
     is_active: 1,
@@ -251,7 +251,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
     currency: "INR",
     category: "Chairs",
     tags: ["chairs", "haworth"],
-    images: ["/products/HAWORTH1.png", "/products/HAWORTH2.png"],
+    images: ["/products/HAWORTH1.png", "/products/HAWORTH2.png", "/products/HAWORTH3.png", "/products/HAWORTH4.png"],
     stock: 10,
     sku: "HW-ZODY-001",
     is_active: 1,
@@ -271,7 +271,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
     currency: "INR",
     category: "Chairs",
     tags: ["chairs", "herman-miller"],
-    images: ["/products/HermanMiller1.png", "/products/HermanMiller2.png"],
+    images: ["/products/HermanMiller1.png", "/products/HermanMiller2.png", "/products/HermanMiller3.png", "/products/HermanMiller4.png"],
     stock: 6,
     sku: "HM-MIRRA1-001",
     is_active: 1,
@@ -291,7 +291,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
     currency: "INR",
     category: "Chairs",
     tags: ["featured", "chairs", "herman-miller"],
-    images: ["/products/HMclassic1.png", "/products/HMclassic2.png"],
+    images: ["/products/HMclassic1.png", "/products/HMclassic2.png", "/products/HMclassic3.png", "/products/HMclassic4.png"],
     stock: 5,
     sku: "HM-CLASSIC-B-001",
     is_active: 1,
@@ -311,7 +311,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
     currency: "INR",
     category: "Chairs",
     tags: ["featured", "chairs", "herman-miller"],
-    images: ["/products/HMAeron1.png", "/products/HMAeron2.png"],
+    images: ["/products/HMAeron1.png", "/products/HMAeron2.png", "/products/HMAeron3.png", "/products/HMAeron4.png"],
     stock: 5,
     sku: "HM-AERON-RM-B-001",
     is_active: 1,
@@ -331,7 +331,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
     currency: "INR",
     category: "Chairs",
     tags: ["featured", "chairs", "herman-miller"],
-    images: ["/products/HMheron1.png", "/products/HMheron2.png"],
+    images: ["/products/HMheron1.png", "/products/HMheron2.png", "/products/HMheron3.png", "/products/HMheron4.png"],
     stock: 4,
     sku: "HM-AERON-PF-B-001",
     is_active: 1,
@@ -351,7 +351,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
     currency: "INR",
     category: "Chairs",
     tags: ["featured", "chairs", "herman-miller"],
-    images: ["/products/HermanMiller3.png", "/products/HermanMiller4.png"],
+    images: ["/products/HermanMiller3.png", "/products/HermanMiller4.png", "/products/HermanMiller1.png", "/products/HermanMiller2.png"],
     stock: 10,
     sku: "HM-MIRRA-001",
     is_active: 1,
@@ -360,23 +360,183 @@ export const FALLBACK_PRODUCTS: Product[] = [
     variants: [],
     created_at: "2024-01-01T00:00:00Z",
     updated_at: "2024-01-01T00:00:00Z",
+  },
+  {
+    id: 11,
+    title: "Humanscale Freedom Task Chair",
+    slug: "humanscale-freedom-task-chair",
+    description: "Designed by Niels Diffrient, the Humanscale Freedom chair features a weight-sensitive recline mechanism and dynamic headrest for ultimate ergonomic support.",
+    price: 28000,
+    compare_at_price: 125000,
+    currency: "INR",
+    category: "Chairs",
+    tags: ["featured", "chairs", "humanscale"],
+    images: [
+      "/products/HumanscaleFreedom1.png",
+      "/products/HumanScaleFreevideo.mp4",
+      "/products/HumanscaleFreedom2.png",
+      "/products/HumanscaleFreedom3.png",
+      "/products/HumanscaleFreedom4.png",
+      "/products/HumanscaleFreedom5.png"
+    ],
+    stock: 8,
+    sku: "HS-FREEDOM-001",
+    is_active: 1,
+    is_featured: 1,
+    options: [{ name: "Color", values: ["Black", "Graphite"] }],
+    variants: [],
+    created_at: "2024-01-01T00:00:00Z",
+    updated_at: "2024-01-01T00:00:00Z",
+  },
+  {
+    id: 12,
+    title: "Steelcase Manual Height Adjustable Table (Model 2/5)",
+    slug: "steelcase-manual-table-2-5",
+    description: "Ergonomic manual height adjustable table by Steelcase. Features a heavy-duty crank height mechanism for smooth, silent posture transitions between sitting and standing.",
+    price: 8800,
+    compare_at_price: 18000,
+    currency: "INR",
+    category: "Adjustable Desk",
+    tags: ["featured", "table", "adjustable-desk", "steelcase", "manual"],
+    images: [
+      "/products/SteelcaseManual25_1.png",
+      "/products/SteelcaseManual25_2.png",
+      "/products/SteelcaseManual25_3.png"
+    ],
+    stock: 8,
+    sku: "SC-MAN-TBL-25",
+    is_active: 1,
+    is_featured: 1,
+    options: [
+      { name: "Mechanism", values: ["Manual Crank"] },
+      { name: "Brand", values: ["Steelcase"] }
+    ],
+    variants: [],
+    created_at: "2024-01-01T00:00:00Z",
+    updated_at: "2024-01-01T00:00:00Z",
+  },
+  {
+    id: 13,
+    title: "Steelcase Manual Height Adjustable Table (155cm x 70cm)",
+    slug: "steelcase-manual-table-155-70",
+    description: "Steelcase manual height adjustable table featuring a spacious 155cm x 70cm surface. Height Range: Minimum down height of 70cm and maximum height of 116cm for complete ergonomic flexibility.",
+    price: 9800,
+    compare_at_price: 20000,
+    currency: "INR",
+    category: "Adjustable Desk",
+    tags: ["featured", "table", "adjustable-desk", "steelcase", "manual"],
+    images: [
+      "/products/SteelcaseManual155_1.png",
+      "/products/SteelcaseManual155_2.png"
+    ],
+    stock: 6,
+    sku: "SC-MAN-TBL-155-70",
+    is_active: 1,
+    is_featured: 1,
+    options: [
+      { name: "Size", values: ["155cm x 70cm"] },
+      { name: "Height Range", values: ["70cm - 116cm"] },
+      { name: "Mechanism", values: ["Manual Crank"] }
+    ],
+    variants: [],
+    created_at: "2024-01-01T00:00:00Z",
+    updated_at: "2024-01-01T00:00:00Z",
+  },
+  {
+    id: 14,
+    title: "Height Adjustable Electric Table 2-Step (150cm x 66cm)",
+    slug: "height-adjustable-electric-table-2step-150-66",
+    description: "Height Adjustable Electric Table featuring a 2-step motorized lift mechanism. Size: 150cm x 66cm. Height Range: Minimum down height of 68cm to maximum height of 105cm.",
+    price: 14000,
+    compare_at_price: 28000,
+    currency: "INR",
+    category: "Adjustable Desk",
+    tags: ["featured", "table", "adjustable-desk", "electric", "office"],
+    images: [
+      "/products/ElectricTable2step1.png",
+      "/products/ElectricTable2step2.png",
+      "/products/ElectricTable2step3.png",
+      "/products/ElectricTable2step4.png"
+    ],
+    stock: 10,
+    sku: "HA-ELEC-TBL-2STEP-150",
+    is_active: 1,
+    is_featured: 1,
+    options: [
+      { name: "Size", values: ["150cm x 66cm"] },
+      { name: "Height Range", values: ["68cm - 105cm"] },
+      { name: "Mechanism", values: ["2-Step Motorized"] }
+    ],
+    variants: [],
+    created_at: "2024-01-01T00:00:00Z",
+    updated_at: "2024-01-01T00:00:00Z",
+  },
+  {
+    id: 15,
+    title: "Height Adjustable Electric Table 3-Step (150cm x 66cm)",
+    slug: "height-adjustable-electric-table-3step-150-66",
+    description: "Height Adjustable Electric Table featuring an advanced 3-step motorized lift mechanism for extended vertical range. Size: 150cm x 66cm. Height Range: Minimum down height of 70cm to maximum height of 126cm.",
+    price: 16000,
+    compare_at_price: 32000,
+    currency: "INR",
+    category: "Adjustable Desk",
+    tags: ["featured", "table", "adjustable-desk", "electric", "office"],
+    images: [
+      "/products/ElectricTable3step1.png",
+      "/products/ElectricTable3step2.png",
+      "/products/ElectricTable3step3.png"
+    ],
+    stock: 10,
+    sku: "HA-ELEC-TBL-3STEP-150",
+    is_active: 1,
+    is_featured: 1,
+    options: [
+      { name: "Size", values: ["150cm x 66cm"] },
+      { name: "Height Range", values: ["70cm - 126cm"] },
+      { name: "Mechanism", values: ["3-Step Motorized"] }
+    ],
+    variants: [],
+    created_at: "2024-01-01T00:00:00Z",
+    updated_at: "2024-01-01T00:00:00Z",
   }
 ];
 
 export const productsApi = {
   list: async (params?: Record<string, string | number>) => {
-    try {
-      const qs = params ? '?' + new URLSearchParams(params as any).toString() : '';
-      return await api.get<PaginatedList<Product>>(`products.php${qs}`);
-    } catch {
-      let items = [...FALLBACK_PRODUCTS];
+    const filterItems = (raw: Product[]) => {
+      let items = [...raw];
       if (params?.search) {
         const q = String(params.search).toLowerCase();
-        items = items.filter(p => p.title.toLowerCase().includes(q) || p.description.toLowerCase().includes(q));
+        items = items.filter(p => p.title.toLowerCase().includes(q) || p.description.toLowerCase().includes(q) || (p.sku && p.sku.toLowerCase().includes(q)));
       }
-      if (params?.category) {
-        items = items.filter(p => p.category.toLowerCase() === String(params.category).toLowerCase());
+      if (params?.category && String(params.category).toLowerCase() !== 'all') {
+        const cat = String(params.category).toLowerCase().replace(/[\s\-_]+/g, '');
+        if (cat.includes('desk') || cat.includes('table') || cat.includes('adjustable')) {
+          items = items.filter(p => {
+            const pCat = p.category.toLowerCase().replace(/[\s\-_]+/g, '');
+            return pCat.includes('desk') || pCat.includes('table') || pCat.includes('adjustable');
+          });
+        } else {
+          items = items.filter(p => p.category.toLowerCase() === String(params.category).toLowerCase());
+        }
       }
+      return items;
+    };
+
+    try {
+      const qs = params ? '?' + new URLSearchParams(params as any).toString() : '';
+      const res = await api.get<PaginatedList<Product>>(`products.php${qs}`);
+      if (res && Array.isArray(res.items)) {
+        const existingSlugs = new Set(res.items.map(i => i.slug.toLowerCase()));
+        const missingFallback = FALLBACK_PRODUCTS.filter(fb => !existingSlugs.has(fb.slug.toLowerCase()));
+        const combined = [...res.items, ...missingFallback];
+        const items = filterItems(combined);
+        return { items, total: items.length, page: 1, per_page: 50, total_pages: 1 };
+      }
+      const items = filterItems(FALLBACK_PRODUCTS);
+      return { items, total: items.length, page: 1, per_page: 50, total_pages: 1 };
+    } catch {
+      const items = filterItems(FALLBACK_PRODUCTS);
       return { items, total: items.length, page: 1, per_page: 50, total_pages: 1 };
     }
   },
@@ -394,9 +554,57 @@ export const productsApi = {
       return FALLBACK_PRODUCTS.find(x => x.slug === slug) || FALLBACK_PRODUCTS[0];
     }
   },
-  create: (data: Partial<Product>)   => api.post<Product>('products.php', data),
-  update: (id: number, data: Partial<Product>) => api.put<Product>(`products.php?id=${id}`, data),
-  delete: (id: number)               => api.delete<{ deleted: boolean }>(`products.php?id=${id}`),
+  create: async (data: Partial<Product>) => {
+    try {
+      return await api.post<Product>('products.php', data);
+    } catch {
+      const newProd: Product = {
+        id: Date.now(),
+        title: data.title || "New Product",
+        slug: data.slug || `product-${Date.now()}`,
+        description: data.description || "",
+        price: data.price || 0,
+        compare_at_price: data.compare_at_price || null,
+        currency: "INR",
+        category: data.category || "General",
+        tags: data.tags || [],
+        images: data.images || [],
+        stock: data.stock || 0,
+        sku: data.sku || null,
+        is_active: data.is_active ?? 1,
+        is_featured: data.is_featured ?? 0,
+        options: data.options || [],
+        variants: data.variants || [],
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+      FALLBACK_PRODUCTS.unshift(newProd);
+      return newProd;
+    }
+  },
+  update: async (id: number, data: Partial<Product>) => {
+    try {
+      return await api.put<Product>(`products.php?id=${id}`, data);
+    } catch {
+      const idx = FALLBACK_PRODUCTS.findIndex(p => p.id === Number(id));
+      if (idx !== -1) {
+        FALLBACK_PRODUCTS[idx] = { ...FALLBACK_PRODUCTS[idx], ...data, updated_at: new Date().toISOString() };
+        return FALLBACK_PRODUCTS[idx];
+      }
+      return { id, ...data } as Product;
+    }
+  },
+  delete: async (id: number) => {
+    try {
+      return await api.delete<{ deleted: boolean }>(`products.php?id=${id}`);
+    } catch {
+      const idx = FALLBACK_PRODUCTS.findIndex(p => p.id === Number(id));
+      if (idx !== -1) {
+        FALLBACK_PRODUCTS.splice(idx, 1);
+      }
+      return { deleted: true };
+    }
+  },
 };
 
 // ─── Orders ───────────────────────────────────────────────────

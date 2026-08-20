@@ -97,34 +97,38 @@ if ($method === 'POST') {
     $chk->execute([$body['slug']]);
     if ($chk->fetch()) json_error('Slug already exists');
 
-    $stmt = $db->prepare('
-        INSERT INTO products
-          (title,slug,description,price,compare_at_price,currency,category,tags,images,stock,sku,is_active,is_featured,options,variants)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-    ');
-    $stmt->execute([
-        $body['title'],
-        $body['slug'],
-        $body['description']      ?? '',
-        (float) $body['price'],
-        isset($body['compare_at_price']) && $body['compare_at_price'] !== '' && $body['compare_at_price'] !== null
-            ? (float) $body['compare_at_price'] : null,
-        $body['currency']         ?? 'INR',
-        $body['category'],
-        json_encode($body['tags']     ?? []),
-        json_encode($body['images']   ?? []),
-        (int) ($body['stock']     ?? 0),
-        $body['sku']              ?? null,
-        (int) ($body['is_active']    ?? 1),
-        (int) ($body['is_featured']  ?? 0),
-        json_encode($body['options']  ?? []),
-        json_encode($body['variants'] ?? []),
-    ]);
+    try {
+        $stmt = $db->prepare('
+            INSERT INTO products
+              (title,slug,description,price,compare_at_price,currency,category,tags,images,stock,sku,is_active,is_featured,options,variants)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+        ');
+        $stmt->execute([
+            $body['title'],
+            $body['slug'],
+            $body['description']      ?? '',
+            (float) $body['price'],
+            isset($body['compare_at_price']) && $body['compare_at_price'] !== '' && $body['compare_at_price'] !== null
+                ? (float) $body['compare_at_price'] : null,
+            $body['currency']         ?? 'INR',
+            $body['category'],
+            json_encode($body['tags']     ?? []),
+            json_encode($body['images']   ?? []),
+            (int) ($body['stock']     ?? 0),
+            !empty($body['sku'])      ? $body['sku'] : null,
+            (int) ($body['is_active']    ?? 1),
+            (int) ($body['is_featured']  ?? 0),
+            json_encode($body['options']  ?? []),
+            json_encode($body['variants'] ?? []),
+        ]);
 
-    $newId = (int) $db->lastInsertId();
-    $stmt  = $db->prepare('SELECT * FROM products WHERE id = ?');
-    $stmt->execute([$newId]);
-    json_success(decode_json_cols($stmt->fetch(), $JSON_COLS), 201);
+        $newId = (int) $db->lastInsertId();
+        $stmt  = $db->prepare('SELECT * FROM products WHERE id = ?');
+        $stmt->execute([$newId]);
+        json_success(decode_json_cols($stmt->fetch(), $JSON_COLS), 201);
+    } catch (PDOException $e) {
+        json_error('Failed to create product: ' . $e->getMessage(), 500);
+    }
 }
 
 // ─── PUT (update) ─────────────────────────────────────────
@@ -151,28 +155,40 @@ if ($method === 'PUT' && $id) {
     foreach ($map as $k => $col) {
         if (array_key_exists($k, $body)) {
             $fields[] = "`$col` = ?";
-            $vals[]   = in_array($k, ['price','compare_at_price']) ? (float) $body[$k]
-                       : (in_array($k, ['stock','is_active','is_featured']) ? (int) $body[$k]
-                       : $body[$k]);
+            if ($k === 'compare_at_price') {
+                $vals[] = (isset($body[$k]) && $body[$k] !== '' && $body[$k] !== null) ? (float) $body[$k] : null;
+            } elseif ($k === 'price') {
+                $vals[] = (float) $body[$k];
+            } elseif (in_array($k, ['stock','is_active','is_featured'])) {
+                $vals[] = (int) $body[$k];
+            } elseif ($k === 'sku') {
+                $vals[] = !empty($body[$k]) ? $body[$k] : null;
+            } else {
+                $vals[] = $body[$k];
+            }
         }
     }
     foreach ($jsonMap as $k) {
         if (array_key_exists($k, $body)) {
             $fields[] = "`$k` = ?";
-            $vals[]   = json_encode($body[$k]);
+            $vals[]   = json_encode(is_array($body[$k]) ? $body[$k] : []);
         }
     }
 
     if (!$fields) json_error('No fields to update');
 
-    $vals[] = $id;
-    $db->prepare('UPDATE products SET ' . implode(', ', $fields) . ' WHERE id = ?')->execute($vals);
+    try {
+        $vals[] = $id;
+        $db->prepare('UPDATE products SET ' . implode(', ', $fields) . ' WHERE id = ?')->execute($vals);
 
-    $stmt = $db->prepare('SELECT * FROM products WHERE id = ?');
-    $stmt->execute([$id]);
-    $row = $stmt->fetch();
-    if (!$row) json_error('Product not found', 404);
-    json_success(decode_json_cols($row, $JSON_COLS));
+        $stmt = $db->prepare('SELECT * FROM products WHERE id = ?');
+        $stmt->execute([$id]);
+        $row = $stmt->fetch();
+        if (!$row) json_error('Product not found', 404);
+        json_success(decode_json_cols($row, $JSON_COLS));
+    } catch (PDOException $e) {
+        json_error('Failed to update product: ' . $e->getMessage(), 500);
+    }
 }
 
 // ─── DELETE ───────────────────────────────────────────────
